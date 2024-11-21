@@ -11,7 +11,7 @@ app.get("/endereco/:cep", async (req, res) => { //criando uma rota
   const cep = req.params.cep; //pegando o cep que o usuario colocar 
 
   try {
-    const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`); Joga dentro de uma variavel o link da PI com o cep que o usuario colocou 
+    const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`); //Joga dentro de uma variavel o link da PI com o cep que o usuario colocou 
 
     if (response.data.erro) { 
       return res.status(404).json({ error: "CEP não encontrado" }); //se o link da PI não conseguir ser encontrado retorna um erro 
