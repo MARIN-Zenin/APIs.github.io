@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pokédex | PokeAPI</title>
+
+    <link rel="stylesheet" href="./style.css">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Buscar Pokémon</h1>
+        <input type="text" id="pokemonName" placeholder="Digite o nome ou ID do Pokémon">
+        <button onclick="fetchPokemon()">Buscar</button>
+
+        <p id="loadingMessage" style="display: none;">Carregando...</p>
+        <div id="errorMessage" class="erro"></div>
+
+        <div id="pokemon-info" class="pokemon-info" style="display: none;">
+            <h1 id="pokemonTitle"></h1>
+            <img src="" alt="" id="pokemonImage">
+            <p><strong>Altura:</strong> <span id="pokemonHeight"></span></p>
+            <p><strong>Peso:</strong> <span id="pokemonWeight"></span></p>
+            <p><strong>Habilidades:</strong> <span id="pokemonAbilities"></span></p>
+            <p><strong>Tipos:</strong> <span id="pokemonTypes"></span></p>
+        </div>
+    </div>
+
+    <script>
+        async function fetchPokemon() {
+            const pokemonName = document.getElementById("pokemonName").value.trim();
+            if (!pokemonName) {
+                document.getElementById("errorMessage").textContent = "Por favor, digite o nome ou ID do Pokémon.";
+                document.getElementById("errorMessage").style.display = "block";
+                return;
+            }
+
+            document.getElementById("errorMessage").style.display = "none";
+            document.getElementById("loadingMessage").style.display = "block";
+
+            try {
+                const response = await fetch(`http://localhost:3000/pokemon/${pokemonName.toLowerCase()}`);
+                if (!response.ok) {
+                    throw new Error("Pokémon não encontrado!");
+                }
+                const data = await response.json();
+
+                document.getElementById("pokemon-info").style.display = "block";
+                document.getElementById("pokemonTitle").textContent = data.name
+                document.getElementById("pokemonImage").src = data.image;
+                document.getElementById("pokemonImage").alt = `Imagem de ${data.name}`;
+                document.getElementById("pokemonHeight").textContent = data.height;
+                document.getElementById("pokemonWeight").textContent = data.weight;
+                document.getElementById("pokemonAbilities").textContent = data.abilities;
+                document.getElementById("pokemonTypes").textContent = data.types;
+            } catch (error) {
+                document.getElementById("errorMessage").textContent = error.message;
+                document.getElementById("errorMessage").style.display = "block";
+                document.getElementById("pokemon-info").style.display = "none";
+            } finally {
+                document.getElementById("loadingMessage").style.display = "none";
+            }
+        }
+    </script>
+</body>
+
+</html>
